@@ -1,0 +1,5 @@
+module Coniguruma {
+    umbrella header "oniguruma.h"
+    export *
+}
+

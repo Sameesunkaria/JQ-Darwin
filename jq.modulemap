@@ -1,0 +1,5 @@
+module Cjq {
+    umbrella header "jq.h"
+    export *
+}
+
