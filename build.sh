@@ -21,6 +21,7 @@ check_requirement libtool
 check_requirement make
 check_requirement automake
 check_requirement autoconf
+check_requirement swift
 
 
 # Checking out submodules
@@ -182,6 +183,11 @@ done
 
 eval ${XCFRAMEWORK_CMD_JQ}
 eval ${XCFRAMEWORK_CMD_ONIG}
+
+# Sorting contents of Info.plist inside the xcframeworks
+swift ${BASEDIR}/ReorderPlist.swift \
+    ${BASEDIR}/Products/frameworks/jq.xcframework/Info.plist \
+    ${BASEDIR}/Products/frameworks/oniguruma.xcframework/Info.plist
 
 # Copying over the licenses
 cp ${BASEDIR}/jq/COPYING ${BASEDIR}/Products/frameworks/jq.xcframework/COPYING
