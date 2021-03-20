@@ -193,10 +193,17 @@ swift ${BASEDIR}/ReorderPlist.swift \
 cp ${BASEDIR}/jq/COPYING ${BASEDIR}/Products/frameworks/jq.xcframework/COPYING
 cp ${BASEDIR}/jq/modules/oniguruma/COPYING ${BASEDIR}/Products/frameworks/oniguruma.xcframework/COPYING
 
+
 # Compressing xcframeworks
 echo "Compressing XCFrameworks"
-zip -r ${BASEDIR}/Products/frameworks/jq.xcframework.zip ${BASEDIR}/Products/frameworks/jq.xcframework/ -x "*.DS_Store"
-zip -r ${BASEDIR}/Products/frameworks/oniguruma.xcframework.zip ${BASEDIR}/Products/frameworks/oniguruma.xcframework/ -x "*.DS_Store"
+cd ${BASEDIR}/Products/frameworks
+# HACK: Setting the timestamps on all files to a fixed value
+# allowing for reproducible zip files.
+find jq.xcframework -exec touch -t 202101010000 {} +
+find oniguruma.xcframework -exec touch -t 202101010000 {} +
+zip -r -X jq.xcframework.zip jq.xcframework/ -x "*.DS_Store"
+zip -r -X oniguruma.xcframework.zip oniguruma.xcframework/ -x "*.DS_Store"
+
 
 # Finishing
 echo "Build successful."
