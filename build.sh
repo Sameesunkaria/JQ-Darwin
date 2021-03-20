@@ -174,8 +174,8 @@ lipo_targets "tvos-simulator"    "x86_64-apple-tvos9.0-simulator" "arm64-apple-t
 # Generating xcframeworks
 echo "Generating XCFrameworks"
 cd ${BASEDIR}
-XCFRAMEWORK_CMD_JQ="xcodebuild -create-xcframework -output ${BASEDIR}/Products/frameworks/jq.xcframework"
-XCFRAMEWORK_CMD_ONIG="xcodebuild -create-xcframework -output ${BASEDIR}/Products/frameworks/oniguruma.xcframework"
+XCFRAMEWORK_CMD_JQ="xcodebuild -create-xcframework -output ${BASEDIR}/Products/frameworks/Cjq.xcframework"
+XCFRAMEWORK_CMD_ONIG="xcodebuild -create-xcframework -output ${BASEDIR}/Products/frameworks/Coniguruma.xcframework"
 for target in ios ios-simulator ios-macabi macos watchos watchos-simulator tvos tvos-simulator; do
     XCFRAMEWORK_CMD_JQ+=" -library ${BASEDIR}/Products/libs/${target}/jq/libjq.a -headers ${BASEDIR}/Products/libs/${target}/jq/include"
     XCFRAMEWORK_CMD_ONIG+=" -library ${BASEDIR}/Products/libs/${target}/oniguruma/libonig.a -headers ${BASEDIR}/Products/libs/${target}/oniguruma/include"
@@ -186,12 +186,12 @@ eval ${XCFRAMEWORK_CMD_ONIG}
 
 # Sorting contents of Info.plist inside the xcframeworks
 swift ${BASEDIR}/ReorderPlist.swift \
-    ${BASEDIR}/Products/frameworks/jq.xcframework/Info.plist \
-    ${BASEDIR}/Products/frameworks/oniguruma.xcframework/Info.plist
+    ${BASEDIR}/Products/frameworks/Cjq.xcframework/Info.plist \
+    ${BASEDIR}/Products/frameworks/Coniguruma.xcframework/Info.plist
 
 # Copying over the licenses
-cp ${BASEDIR}/jq/COPYING ${BASEDIR}/Products/frameworks/jq.xcframework/COPYING
-cp ${BASEDIR}/jq/modules/oniguruma/COPYING ${BASEDIR}/Products/frameworks/oniguruma.xcframework/COPYING
+cp ${BASEDIR}/jq/COPYING ${BASEDIR}/Products/frameworks/Cjq.xcframework/COPYING
+cp ${BASEDIR}/jq/modules/oniguruma/COPYING ${BASEDIR}/Products/frameworks/Coniguruma.xcframework/COPYING
 
 
 # Compressing xcframeworks
@@ -199,10 +199,10 @@ echo "Compressing XCFrameworks"
 cd ${BASEDIR}/Products/frameworks
 # HACK: Setting the timestamps on all files to a fixed value
 # allowing for reproducible zip files.
-find jq.xcframework -exec touch -t 202101010000 {} +
-find oniguruma.xcframework -exec touch -t 202101010000 {} +
-zip -r -X jq.xcframework.zip jq.xcframework/ -x "*.DS_Store"
-zip -r -X oniguruma.xcframework.zip oniguruma.xcframework/ -x "*.DS_Store"
+find Cjq.xcframework -exec touch -t 202101010000 {} +
+find Coniguruma.xcframework -exec touch -t 202101010000 {} +
+zip -r -X Cjq.xcframework.zip Cjq.xcframework/ -x "*.DS_Store"
+zip -r -X Coniguruma.xcframework.zip Coniguruma.xcframework/ -x "*.DS_Store"
 
 
 # Finishing
@@ -210,5 +210,5 @@ echo "Build successful."
 echo "Build artifacts at ${BASEDIR}/Products"
 echo "Frameworks can be found under ${BASEDIR}/Products/frameworks"
 echo "Framework checksums"
-shasum -a 1 ${BASEDIR}/Products/frameworks/jq.xcframework.zip
-shasum -a 1 ${BASEDIR}/Products/frameworks/oniguruma.xcframework.zip
+shasum -a 1 ${BASEDIR}/Products/frameworks/Cjq.xcframework.zip
+shasum -a 1 ${BASEDIR}/Products/frameworks/Coniguruma.xcframework.zip
