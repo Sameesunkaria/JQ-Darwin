@@ -28,11 +28,17 @@ The `build.sh` script generates an `XCFramework` for `jq` and the associated ver
 
 ## XCFramework Releases
 
-A zip archive of the `XCFramework`s for `jq` and the associated version of `oniguruma` are available for download as part of the release assets. The release info should contain the `SHA-1` hashes of both the zip archives. The authenticity of the builds can be verified by checking out the release tag for the particular release and running the `build.sh` script. When the script finishes running, it prints the `SHA-1` hashes of the zip archives of the newly built `XCFrameworks`. This hash must match the hash on the release page, and hash of the downloaded zip archive obtained by running:
+A zip archive of the `XCFramework`s for `jq` and the associated version of `oniguruma` are available for download as part of the [release assets](https://github.com/Sameesunkaria/JQ-Darwin/releases). The release info should contain the `SHA-1` hashes of both the zip archives and the version of Xcode and other build tools used to generate the framework.
+
+### Verifying Authenticity of Builds
+
+Since the frameworks are being distributed as compiled binaries, it becomes crucial to verify the authenticity of the builds. The authenticity of the builds can be verified by checking out the release tag for the particular release and running the `build.sh` script. When the script finishes running, it prints out the `SHA-1` hashes of the zip archives of the newly built `XCFrameworks`. This hash must match the hash of the respective zip archives on the release page, and hash of the downloaded zip archive obtained by running:
 
 ```
 shasum -a 1 path/to/framework.xcframework.zip
 ```
+
+**NOTE:** Generating an identical build for verifying the authenticity requires that the same versions of the Xcode and other build tools be used. Additionally, for now, the desired version of Xcode must be installed at `/Applications/Xcode.app` otherwise the `SHA-1` hashes may not match.
 
 ## Supported Targets
 
