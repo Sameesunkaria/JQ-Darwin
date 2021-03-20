@@ -34,6 +34,10 @@ unset CFLAGS
 unset CXXFLAGS
 unset LDFLAGS
 
+# Setting the ZERO_AR_DATE env var to avoid embedding timestamps in
+# the generated lib, allowing for reproducible builds.
+export ZERO_AR_DATE=1
+
 MAKEJOBS="$(sysctl -n hw.ncpu || echo 1)"
 CC_="$(xcrun -f clang || echo clang)"
 
@@ -68,8 +72,9 @@ build() {
     # HACK: autoconf config.sub does not support arm64_32
     [[ "${ARCH}" = "arm64_32" ]] && HOST="arm64-apple-darwin"
 
-    CFLAGS="-arch ${ARCH} -isysroot ${SDK_PATH} -target ${TARGET} -fembed-bitcode -D_REENTRANT"
-    LDFLAGS="-arch ${ARCH} -isysroot ${SDK_PATH}"
+    # Make sure all paths are relative to ensure reproducible builds.
+    CFLAGS="-isysroot ${SDK_PATH} -target ${TARGET} -D_REENTRANT -fembed-bitcode -no-canonical-prefixes -fdebug-compilation-dir ."
+    LDFLAGS="-isysroot ${SDK_PATH}"
     CC="${CC_} ${CFLAGS}"
 
     # build oniguruma
@@ -92,7 +97,7 @@ build() {
         --enable-shared=no \
         --enable-static=yes \
         --prefix='' \
-        --with-oniguruma=${BASEDIR}/Products/oniguruma/${TARGET} \
+        --with-oniguruma=../Products/oniguruma/${TARGET} \
         --disable-maintainer-mode
     disable_deprecated_functions
     make -j${MAKEJOBS} install DESTDIR="${BASEDIR}/Products/jq/${TARGET}"
