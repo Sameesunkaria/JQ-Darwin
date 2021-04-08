@@ -40,7 +40,7 @@ unset LDFLAGS
 export ZERO_AR_DATE=1
 
 MAKEJOBS="$(sysctl -n hw.ncpu || echo 1)"
-CC_="$(xcrun -f clang || echo clang)"
+CC="$(xcrun -f clang || echo clang)"
 
 cd "${BASEDIR}/jq"
 [[ ! -f ./configure ]] && autoreconf -fi
@@ -74,13 +74,12 @@ build() {
     [[ "${ARCH}" = "arm64_32" ]] && HOST="arm64-apple-darwin"
 
     # Make sure all paths are relative to ensure reproducible builds.
-    CFLAGS="-isysroot ${SDK_PATH} -target ${TARGET} -D_REENTRANT -fembed-bitcode -no-canonical-prefixes -fdebug-compilation-dir ."
+    CFLAGS="-O2 -isysroot ${SDK_PATH} -target ${TARGET} -D_REENTRANT -fembed-bitcode -no-canonical-prefixes"
     LDFLAGS="-isysroot ${SDK_PATH}"
-    CC="${CC_} ${CFLAGS}"
 
     # build oniguruma
     cd "${BASEDIR}/jq/modules/oniguruma"
-    CC=${CC} LDFLAGS=${LDFLAGS} \
+    CC=${CC} CFLAGS=${CFLAGS} LDFLAGS=${LDFLAGS} \
     ./configure \
         --host=${HOST} \
         --enable-shared=no \
@@ -91,7 +90,7 @@ build() {
 
     # build jq
     cd "${BASEDIR}/jq"
-    CC=${CC} LDFLAGS=${LDFLAGS} \
+    CC=${CC} CFLAGS=${CFLAGS} LDFLAGS=${LDFLAGS} \
     ./configure \
         --host=${HOST} \
         --enable-docs=no \
