@@ -4,11 +4,25 @@ Build [jq](https://stedolan.github.io/jq/) for various Apple platforms. This rep
 
 ## Requirements
 
-Xcode 12 or higher is required to generate a build for all the platforms supported by the `build.sh` script. In addition to that, all the system dependencies for building `jq` are also required. You'll need to have `git`, `libtool`, `make`, `automake`, and `autoconf` installed on your Mac.
+Xcode 12 or higher is required to generate a build for all the platforms supported by the `build.sh` script. In addition to that, all the system dependencies for building `jq` are also required. You'll need to have `automake`, and `autoconf` installed on your Mac (other dependencies are part of Xcode's command line tools).
 
 ## Building
 
-To build, make sure you have all of the required dependencies, and run the `build.sh` file.
+Before building, make sure you have all of the required dependencies and that command line tools are selected for the desired version of Xcode. 
+
+To install `automake`, and `autoconf` using [Homebrew](https://brew.sh):
+
+```
+brew install automake autoconf
+```
+
+To select Xcode command line tools:
+
+```
+sudo xcode-select -s /path/to/Xcode.app
+```
+
+Now, you can build by running the `build.sh` file.
 
 ```
 ./build.sh
@@ -38,7 +52,7 @@ Since the frameworks are being distributed as compiled binaries, it becomes cruc
 shasum -a 1 path/to/framework.xcframework.zip
 ```
 
-**NOTE:** Generating an identical build for verifying the authenticity requires that the same versions of the Xcode and other build tools be used. Additionally, for now, the desired version of Xcode must be installed at `/Applications/Xcode.app` otherwise the `SHA-1` hashes may not match.
+>**NOTE:** To generate an identical build for verifying the authenticity make sure that same versions of the Xcode and other build tools are used. Please follow the instructions provided in the README for the particular release that you want to verify. The instructions may vary between releases.
 
 ## Supported Targets
 
