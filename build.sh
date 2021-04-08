@@ -68,7 +68,14 @@ disable_deprecated_functions() {
 build() {
     ARCH=$1; SDK=$2; TARGET=$3
     HOST="${ARCH}-apple-darwin"
-    SDK_PATH=$(xcrun -f --sdk ${SDK} --show-sdk-path)
+
+    # HACK: The SDK path seems to be embedded into the generated lib.
+    # This presents a hurdle to ensure reproducible build, as Xcode
+    # must be located in the same directory to achieve an equivalent
+    # binary. To work around this, the SDK is symlinked in /tmp.
+    rm -f /tmp/${SDK}
+    ln -s $(xcrun -f --sdk ${SDK} --show-sdk-path) /tmp/${SDK}
+    SDK_PATH=/tmp/${SDK}
 
     # HACK: autoconf config.sub does not support arm64_32
     [[ "${ARCH}" = "arm64_32" ]] && HOST="arm64-apple-darwin"
